@@ -14,10 +14,10 @@ for line in fileinput.input():
 passes.append(passport)
 
 fields = {'byr', 'iyr', 'eyr','hgt', 'hcl', 'ecl', 'pid'}
-valid = 0
-
+part1 = part2 = 0
 for passport in passes:
     if all(field in passport for field in fields):
+        part1 += 1
         if len(passport['byr']) != 4 or not (1920 <= int(passport['byr']) <= 2002):
             continue 
         if len(passport['iyr']) != 4 or not (2010 <= int(passport['iyr']) <= 2020):
@@ -42,6 +42,7 @@ for passport in passes:
             continue
         if len(passport['pid']) != 9 or any(not c.isdigit() for c in passport['pid']):
             continue
-        valid += 1
-print(passport.keys())
-print(valid)
+        part2 += 1
+
+print(part1)
+print(part2)
