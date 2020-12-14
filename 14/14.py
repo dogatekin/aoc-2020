@@ -23,13 +23,6 @@ for line in lines:
 
 print(sum(mem.values()))
 
-def candidates(addr_str):
-    if 'X' not in addr_str:
-        yield int(addr_str, 2)
-    else:
-        yield from candidates(addr_str.replace('X', '1', 1))
-        yield from candidates(addr_str.replace('X', '0', 1))
-
 mem = {}
 for line in lines:
     if line.startswith('mask'):
@@ -43,9 +36,14 @@ for line in lines:
         for i, v in enumerate(mask):
             if v != '0':
                 bin_addr[i+1] = v
-        joined = ''.join(bin_addr)
         
-        for addr in candidates(joined):
+        X_inds = [i for i, v in enumerate(bin_addr) if v == 'X']
+        bits = [f'{i:#0{len(X_inds)+2}b}'[2:] for i in range(2**len(X_inds))]
+        
+        for bit in bits:
+            for i, v in zip(X_inds, bit):
+                bin_addr[i] = v
+            addr = int(''.join(bin_addr), 2)
             mem[addr] = val
 
 print(sum(mem.values()))
